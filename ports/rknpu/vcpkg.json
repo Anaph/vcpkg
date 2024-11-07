@@ -1,0 +1,7 @@
+{
+    "name": "rknpu",
+    "version-string": "1.7.3",
+    "description": "Rockchip Neural Processing Unit (NPU) library and drivers.",
+    "homepage": "https://github.com/rockchip-linux/rknpu",
+    "dependencies": []
+}

@@ -1,0 +1,10 @@
+{
+    "name": "gstreamer-rockchip",
+    "version-string": "1.0.0",
+    "description": "GStreamer plugin for Rockchip platform.",
+    "homepage": "https://github.com/rockchip-linux/gstreamer-rockchip",
+    "dependencies": [
+        "gstreamer",
+        "glib"
+    ]
+}

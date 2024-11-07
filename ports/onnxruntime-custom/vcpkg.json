@@ -1,0 +1,7 @@
+{
+  "name": "onnxruntime-custom",
+  "version": "1.17.3-custom",
+  "description": "onnxruntime (custom)",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT"
+}
