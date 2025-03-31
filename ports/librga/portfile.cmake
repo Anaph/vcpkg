@@ -1,0 +1,19 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO airockchip/librga
+    REF 31e5e71729422e93ce37b073ec3457ee58994302
+    SHA512 0a5c872927f84965729bda93282df85074f1621fa82cd79f1ab37dc378fc728ae0daf9f0daf3ed7eef0063837f6aa925a4d8c4db897b34c2f803a5441416ec8b
+    HEAD_REF main
+)
+
+set(GCC_ARCHITECTURE "aarch64")
+
+file(GLOB INCLUDES "${SOURCE_PATH}/include/*")
+file(COPY ${INCLUDES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(COPY "${SOURCE_PATH}/libs/Linux/gcc-${GCC_ARCHITECTURE}/librga.a" 
+DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(COPY "${SOURCE_PATH}/libs/Linux/gcc-${GCC_ARCHITECTURE}/librga.a" 
+DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

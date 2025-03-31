@@ -1,0 +1,8 @@
+{
+    "name": "librga",
+    "version": "1.10.3",
+    "description": "Rockchip Raster Graphic Acceleration Unit library",
+    "homepage": "https://github.com/airockchip/librga",
+    "license": "Apache-2.0",
+    "dependencies": []
+  }

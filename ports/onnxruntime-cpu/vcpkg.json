@@ -1,0 +1,7 @@
+{
+  "name": "onnxruntime-cpu",
+  "version": "1.16.3",
+  "description": "onnxruntime (CPU)",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT"
+}
