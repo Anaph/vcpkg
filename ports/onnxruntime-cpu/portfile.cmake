@@ -1,9 +1,31 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-#https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-linux-x64-1.16.3.tgz
+
+# Detect URL and SHA512 for archs
+# https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-linux-x64-1.16.3.tgz
+# https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-linux-aarch64-1.16.3.tgz
+# https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-win-x64-1.16.3.zip
+if(VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "OS Windows is not supported yet")
+elseif(VCPKG_TARGET_IS_LINUX)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(FILE_ARCH "x64")
+        set(FILE_FULLNAME "onnxruntime-linux-${FILE_ARCH}-${VERSION}.tgz")
+        set(FILE_SHA512 "66eaebcf3db5c0e38224f1aa8bd50ae0158f42d3ee9a317621e1e9dba6ab921e9aafa26c02718facb810bacae68522851a4ce2b1821a224920dae98f18a89e74")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(FILE_ARCH "aarch64")
+        set(FILE_FULLNAME "onnxruntime-linux-${FILE_ARCH}-${VERSION}.tgz")
+        set(FILE_SHA512 "73140375fbdb60482a9959c1e5facc88b92500cae9206d6e2a017eb858109f8e3d1a9903e69da1bc7a05162f83c97f8a30d9ae0dc3b0bfca1146a849b3ad404f")
+    else()
+        message(FATAL_ERROR "Linux ${VCPKG_TARGET_ARCHITECTURE} is not supported")
+    endif()
+else()
+    message(FATAL_ERROR "Target OS is not supported")
+endif()
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/onnxruntime-linux-x64-${VERSION}.tgz"
-    FILENAME "onnxruntime-linux-x64-${VERSION}.tgz"
-    SHA512 66eaebcf3db5c0e38224f1aa8bd50ae0158f42d3ee9a317621e1e9dba6ab921e9aafa26c02718facb810bacae68522851a4ce2b1821a224920dae98f18a89e74
+    URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/${FILE_FULLNAME}"
+    FILENAME "${FILE_FULLNAME}"
+    SHA512 "${FILE_SHA512}"
 )
 
 vcpkg_extract_source_archive(
@@ -35,45 +57,45 @@ file(MAKE_DIRECTORY
     )
 
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/include
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/include
         DESTINATION ${CURRENT_PACKAGES_DIR}
     )
 
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so.1.16.3
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so.${VERSION}
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so.1.16.3
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so.${VERSION}
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
 
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so.1.16.3
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so.${VERSION}
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 file(COPY
-        ${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/lib/libonnxruntime.so.1.16.3
+        ${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/lib/libonnxruntime.so.${VERSION}
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
 
 # # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/onnxruntime-linux-x64-${VERSION}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/onnxruntime-linux-${FILE_ARCH}-${VERSION}/LICENSE")
