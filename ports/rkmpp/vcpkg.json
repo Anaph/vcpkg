@@ -1,0 +1,17 @@
+{
+    "name": "rkmpp",
+    "version-string": "jellyfin-mpp",
+    "description": "Rockchip Media Process Platform (MPP) – fork for Jellyfin builds",
+    "homepage": "https://github.com/nyanmisaka/mpp",
+    "license": "MIT",
+    "dependencies": [],
+    "features": {
+      "shared": {
+        "description": "Build shared libraries (DLL/.so)"
+      },
+      "static": {
+        "description": "Build static libraries (.lib/.a)"
+      }
+    }
+  }
+  

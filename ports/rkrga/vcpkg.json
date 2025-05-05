@@ -1,0 +1,17 @@
+{
+    "name": "rkrga",
+    "version-string": "jellyfin-rga",
+    "description": "Rockchip Raster Graphic Acceleration Unit (RGA) – fork for Jellyfin builds",
+    "homepage": "https://github.com/nyanmisaka/rk-mirrors",
+    "license": "Apache-2.0",
+    "dependencies": [],
+    "features": {
+      "shared": {
+        "description": "Build shared libraries (.so/.dll)"
+      },
+      "static": {
+        "description": "Build static libraries (.a/.lib)"
+      }
+    }
+  }
+  
