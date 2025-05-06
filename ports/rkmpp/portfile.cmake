@@ -19,19 +19,87 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# (Optional) Copy debugging symbols on Windows 
-vcpkg_copy_pdbs()
+# Install the license
+#file(INSTALL ${SOURCE_PATH}/LICENSE
+#     DESTINATION ${CURRENT_PACKAGES_DIR}/licenses)
 
-file(INSTALL
-    "${SOURCE_PATH}/pkgconfig/rockchip_mpp.pc.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-    RENAME rockchip_mpp.pc)
+# Only on Windows do we need to fix up .targets/.props & copy PDBs
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets()
+    vcpkg_copy_pdbs()
+endif()
 
-file(INSTALL
-    "${SOURCE_PATH}/pkgconfig/rockchip_vpu.pc.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-    RENAME rockchip_vpu.pc)
+# ────────────────────────────────────────────────────────────────────
+# Generate rockchip_mpp.pc for pkg-config
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+set(_PC ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/rockchip_mpp.pc)
+set(_PC_debug ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/rockchip_mpp.pc)
+file(WRITE ${_PC}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: rockchip_mpp\n"
+    "Description: Rockchip Media Process Platform (MPP)\n"
+    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
+    "Libs: -lrockchip_mpp\n"
+    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Cflags: -I\${includedir}\n"
+)
+
+file(WRITE ${_PC_debug}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: rockchip_mpp\n"
+    "Description: Rockchip Media Process Platform (MPP)\n"
+    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
+    "Libs: -lrockchip_mpp\n"
+    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Cflags: -I\${includedir}\n"
+)
+
+set(_PC_vpu ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/rockchip_vpu.pc)
+set(_PC_vpu_debug ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/rockchip_vpu.pc)
+file(WRITE ${_PC_vpu}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: rockchip_vpu\n"
+    "Description: Rockchip VPU\n"
+    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
+    "Libs: -lrockchip_vpu\n"
+    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Cflags: -I\${includedir}\n"
+)
+
+file(WRITE ${_PC_vpu_debug}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: rockchip_vpu\n"
+    "Description: Rockchip VPU\n"
+    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
+    "Libs: -lrockchip_vpu\n"
+    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Cflags: -I\${includedir}\n"
+)
+# Normalize paths in .pc and hook in vcpkg’s pkgconfig handling
+vcpkg_fixup_pkgconfig()
+
+# ────────────────────────────────────────────────────────────────────
+# Copy the built MPP library into the debug folder too, so -lrockchip_mpp
+# actually resolves when FFmpeg’s debug configure/link runs.
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(GLOB MPP_LIBS "${CURRENT_PACKAGES_DIR}/lib/librockchip_mpp.*")
+file(COPY ${MPP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(GLOB VPU_LIBS "${CURRENT_PACKAGES_DIR}/lib/librockchip_vpu.*")
+file(COPY ${VPU_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+# ────────────────────────────────────────────────────────────────────
 
 
-# Install LICENSE
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/licenses)
+# ────────────────────────────────────────────────────────────────────

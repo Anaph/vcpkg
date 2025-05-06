@@ -179,14 +179,9 @@ set(FFMPEG_PKGCONFIG_MODULES libavutil)
 #
 # Rockchip hardware flags
 #
-if("libdrm" IN_LIST FEATURES)
-  string(APPEND OPTIONS " --enable-libdrm")
-else()
-  string(APPEND OPTIONS " --disable-libdrm")
-endif()
 
 if("rkmpp" IN_LIST FEATURES)
-  string(APPEND OPTIONS " --enable-rkmpp --enable-version3")
+  string(APPEND OPTIONS " --enable-gpl --enable-rkmpp --enable-version3 --enable-libdrm")
   list(APPEND FFMPEG_PKGCONFIG_MODULES rockchip_mpp rockchip_vpu)
   set(ENABLE_MPP ON)
 else()

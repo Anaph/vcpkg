@@ -9,104 +9,55 @@ vcpkg_from_github(
 )
 
 # ────────────────────────────────────────────────────────────────
-# 1) Patch NormalRga.cpp: include <cstdint> and funnel all (unsigned int)ptr
-#    casts through uintptr_t so they no longer lose bits.
+# Patch NormalRga.cpp & im2d_impl.cpp for uintptr_t casts
 file(READ   ${SOURCE_PATH}/core/NormalRga.cpp _nr)
 string(REPLACE
     "#include \"NormalRga.h\""
     "#include <cstdint>\n#include \"NormalRga.h\""
-    _nr
-    "${_nr}"
+    _nr "${_nr}"
 )
-# replace every “(unsigned int)foo” with “(unsigned int)(uintptr_t)foo”
 string(REGEX REPLACE
     "\\(unsigned int\\)*([A-Za-z_][A-Za-z0-9_]*)"
-    "(unsigned int)(size_t)\\1"
-    _nr
-    "${_nr}"
+    "(unsigned int)(uintptr_t)\\1"
+    _nr "${_nr}"
 )
 file(WRITE  ${SOURCE_PATH}/core/NormalRga.cpp "${_nr}")
-# ────────────────────────────────────────────────────────────────
 
-# ────────────────────────────────────────────────────────────────
-# 1) Patch NormalRga.cpp: include <cstdint> and funnel all (unsigned int)ptr
-#    casts through uintptr_t so they no longer lose bits.
 file(READ   ${SOURCE_PATH}/im2d_api/src/im2d_impl.cpp _im2)
 string(REPLACE
     "#include \"NormalRga.h\""
     "#include <cstdint>\n#include \"NormalRga.h\""
-    _im2
-    "${_im2}"
+    _im2 "${_im2}"
 )
-# replace every “(unsigned int)foo” with “(unsigned int)(uintptr_t)foo”
 string(REGEX REPLACE
     "\\(unsigned int\\)*([A-Za-z_][A-Za-z0-9_]*)"
-    "(unsigned int)(size_t)\\1"
-    _im2
-    "${_im2}"
+    "(unsigned int)(uintptr_t)\\1"
+    _im2 "${_im2}"
 )
 file(WRITE  ${SOURCE_PATH}/im2d_api/src/im2d_impl.cpp "${_im2}")
 # ────────────────────────────────────────────────────────────────
 
-
-
-# Determine whether we want shared or static only
-if(FEATURE_SHARED)
-    set(_DEFAULT_LIB "shared")
-else()
-    set(_DEFAULT_LIB "static")
-
-
 # ────────────────────────────────────────────────────────────────
-# Patch RGA’s own meson.build so that all cpp_args = ['-w','-fpermissive']
-file(READ   ${SOURCE_PATH}/meson.build _rga_meson2)
-string(REPLACE
-    "
-librga = shared_library(
-    'rga',
-    librga_srcs,
-    dependencies : [libthreads_dep],
-	include_directories : incdir,
-    version : meson.project_version(),
-    cpp_args : ['-w'],
-    install : true,
-)"
-    "librga = static_library(
-    'rga',
-    librga_srcs,
-    dependencies : [libthreads_dep],
-        include_directories : incdir,
-    cpp_args : ['-w'],
-    install : true,
-)"
-    _rga_meson2
-    "${_rga_meson2}"
-)
-file(WRITE  ${SOURCE_PATH}/meson.build "${_rga_meson2}")
-# ────────────────────────────────────────────────────────────────
-
-endif()
-
-
-# ────────────────────────────────────────────────────────────────
-# Patch RGA’s own meson.build so that all cpp_args = ['-w','-fpermissive']
-file(READ   ${SOURCE_PATH}/meson.build _rga_meson)
+# Patch meson.build: inject -fpermissive and disable werror
+file(READ   ${SOURCE_PATH}/meson.build _meson)
 string(REPLACE
     "cpp_args : ['-w']"
     "cpp_args : ['-w', '-fpermissive']"
-    _rga_meson
-    "${_rga_meson}"
+    _meson "${_meson}"
 )
-file(WRITE  ${SOURCE_PATH}/meson.build "${_rga_meson}")
+file(WRITE  ${SOURCE_PATH}/meson.build "${_meson}")
 # ────────────────────────────────────────────────────────────────
-
-
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS _FEATURE_OPTIONS
     FEATURES shared static
 )
 
+if(FEATURE_SHARED)
+    set(_DEFAULT_LIB "shared")
+else()
+    set(_DEFAULT_LIB "static")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
@@ -122,20 +73,74 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
+# ────────────────────────────────────────────────────────────────────
+# Generate pkg-config so 'pkg-config --libs librga' works
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+set(_PC ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librga.pc)
+file(WRITE ${_PC}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: librga\n"
+    "Description: Rockchip Raster Graphic Acceleration (RGA)\n"
+    "Version: 2.1.0\n"
+    "Libs: -lrga\n"
+    "Libs.private: -lstdc++ -lm\n"
+    "Cflags: -I\${includedir}\n"
+)
 
-# Generate rockchip_rga.pc for pkg-config
-file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/rockchip_rga.pc" 
-"prefix=${CURRENT_PACKAGES_DIR}
-exec_prefix=\${prefix}
-libdir=\${prefix}/lib
-includedir=\${prefix}/include
+set(_PC_ALSO ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/rockchip_rga.pc)
+file(WRITE ${_PC_ALSO}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: librga\n"
+    "Description: Rockchip Raster Graphic Acceleration (RGA)\n"
+    "Version: 2.1.0\n"
+    "Libs: -lrga\n"
+    "Libs.private: -lstdc++ -lm\n"
+    "Cflags: -I\${includedir}\n"
+)
 
-Name: rockchip_rga
-Description: Rockchip 2D Raster Graphic Acceleration
-Version: 1.10.1
-Libs: -L\${libdir} -lrga
-Cflags: -I\${includedir}
-")
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+set(_PC_debug ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librga.pc)
+file(WRITE ${_PC_debug}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: librga\n"
+    "Description: Rockchip Raster Graphic Acceleration (RGA)\n"
+    "Version: 2.1.0\n"
+    "Libs: -lrga\n"
+    "Libs.private: -lstdc++ -lm\n"
+    "Cflags: -I\${includedir}\n"
+)
+
+set(_PC_debug_ALSO ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/rockchip_rga.pc)
+file(WRITE ${_PC_debug_ALSO}
+    "prefix=${CURRENT_PACKAGES_DIR}\n"
+    "exec_prefix=\${prefix}\n"
+    "libdir=\${prefix}/lib\n"
+    "includedir=\${prefix}/include\n\n"
+    "Name: librga\n"
+    "Description: Rockchip Raster Graphic Acceleration (RGA)\n"
+    "Version: 2.1.0\n"
+    "Libs: -lrga\n"
+    "Libs.private: -lstdc++ -lm\n"
+    "Cflags: -I\${includedir}\n"
+)
+
+vcpkg_fixup_pkgconfig()
+# ────────────────────────────────────────────────────────────────────
+
+# ────────────────────────────────────────────────────────────────────
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(GLOB RGA_LIBS "${CURRENT_PACKAGES_DIR}/lib/librga.*")
+file(COPY ${RGA_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+# ────────────────────────────────────────────────────────────────────
 
 # Install license
 file(INSTALL ${SOURCE_PATH}/COPYING
