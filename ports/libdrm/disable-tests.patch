@@ -1,0 +1,16 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -31,7 +31,6 @@ SUBDIRS = \
+        . \
+        $(LIBKMS_SUBDIR) \
+        $(INTEL_SUBDIR) \
+-       $(NOUVEAU_SUBDIR) \
++       $(NOUVEAU_SUBDIR) \
+        $(RADEON_SUBDIR) \
+        $(AMDGPU_SUBDIR) \
+        $(OMAP_SUBDIR) \
+@@ -45,7 +44,6 @@ SUBDIRS = \
+        $(ETNAVIV_SUBDIR) \
+        data \
+-       tests \
+        $(MAN_SUBDIR)

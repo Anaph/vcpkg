@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO             nyanmisaka/ffmpeg-rockchip
+    REPO             Anaph/ffmpeg-rockchip
     REF              7.1
-    SHA512           eacbceaa97b8fe221e926852096f0cc95491b47ee688911663e02676a55493622befc726e0e33756bf1f332ae58ddcf32775879e953e0c8617ca60ecd6d301a6
+    SHA512           750c7a1d447f0938010e0a467e7710ba5abc274b19c29f6c39f1563fc3dfb1458bbf4986661779a537e2e26ecc1a8b1369663a905cd5515bf9babb95b2846c1b
     HEAD_REF         7.1
     PATCHES
         0001-create-lib-libraries.patch

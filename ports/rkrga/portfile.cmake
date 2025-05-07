@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO           nyanmisaka/rk-mirrors
+    REPO           Anaph/rk-mirrors
     REF            jellyfin-rga-next
-    SHA512         d611cdd9557fc07bb3786a4cbaeb91263e70172eb764c9349b101707018517a976b2db8c96dbe41825c33b79841b1c8d0fcac44fb8ef20b4bc76f8e42a361f72
+    SHA512         e05845f88a15937c7ddbcae06fe39c40a61fd45a58078d67ad13b024030976a2f966e16c83b8233458df2d08340b650da616f7241232eba8bf2e24ca6cd620ef
     HEAD_REF       jellyfin-rga-next
 )
 
@@ -42,7 +42,7 @@ file(WRITE  ${SOURCE_PATH}/im2d_api/src/im2d_impl.cpp "${_im2}")
 file(READ   ${SOURCE_PATH}/meson.build _meson)
 string(REPLACE
     "cpp_args : ['-w']"
-    "cpp_args : ['-w', '-fpermissive']"
+    "cpp_args : ['-w', '-fpermissive', '-fPIC']"
     _meson "${_meson}"
 )
 file(WRITE  ${SOURCE_PATH}/meson.build "${_meson}")

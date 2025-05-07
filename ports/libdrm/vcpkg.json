@@ -1,0 +1,16 @@
+{
+    "name": "libdrm",
+    "version-string": "2.4.89",
+    "port-version": 0,
+    "description": "Userspace library for the Direct Rendering Manager (DRM) kernel subsystem",
+    "homepage": "https://dri.freedesktop.org/libdrm/",
+    "license": "MIT",
+    "dependencies": [],
+    "features": {
+      "rockchip-experimental-api": {
+        "description": "Enable Rockchip experimental API support",
+        "dependencies": []
+      }
+    }
+  }
+  

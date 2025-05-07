@@ -2,18 +2,20 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO nyanmisaka/mpp
-    REF jellyfin-mpp
-    SHA512 8ed6f8a6b7f28055ed22f548e7b92f2a807d74c3b0dc3c61c53fdd4d44f1014c79368a470b59430c0d6bc5b2486097f63423fe13aec431ba46f14a9b151adc94
-    HEAD_REF jellyfin-mpp
+    REPO Anaph/mpp
+    REF jellyfin-mpp-next
+    SHA512 f40768167f3ba0b960ef07a847309f9fab999b326cbb41b314d29770b7ed371831083cfe1bfc7992b49eb892767124f08a02fdc6f8b4610b646824d02e4ca8c9
+    HEAD_REF jellyfin-mpp-next
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DETERMINE_BUILD_TRIPLET
+
     OPTIONS
       -DCMAKE_INSTALL_PREFIX:PATH=${CURRENT_PACKAGES_DIR}
-      -DBUILD_SHARED_LIBS:BOOL=${FEATURE_SHARED}
+      -DBUILD_SHARED_LIBS:BOOL=OFF
       -DBUILD_TEST:BOOL=OFF
 )
 
@@ -42,9 +44,9 @@ file(WRITE ${_PC}
     "includedir=\${prefix}/include\n\n"
     "Name: rockchip_mpp\n"
     "Description: Rockchip Media Process Platform (MPP)\n"
-    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
-    "Libs: -lrockchip_mpp\n"
-    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Version: 1.3.9\n"              # satisfy `>= 1.3.8`
+    "Libs: -L${libdir} -lrockchip_mpp\n"
+    "Libs.private: \n"  # pull in guard helpers & math
     "Cflags: -I\${includedir}\n"
 )
 
@@ -55,9 +57,9 @@ file(WRITE ${_PC_debug}
     "includedir=\${prefix}/include\n\n"
     "Name: rockchip_mpp\n"
     "Description: Rockchip Media Process Platform (MPP)\n"
-    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
-    "Libs: -lrockchip_mpp\n"
-    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Version: 1.3.9\n"              # satisfy `>= 1.3.8`
+    "Libs: -L${libdir} -lrockchip_mpp\n"
+    "Libs.private: \n"  # pull in guard helpers & math
     "Cflags: -I\${includedir}\n"
 )
 
@@ -70,9 +72,9 @@ file(WRITE ${_PC_vpu}
     "includedir=\${prefix}/include\n\n"
     "Name: rockchip_vpu\n"
     "Description: Rockchip VPU\n"
-    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
-    "Libs: -lrockchip_vpu\n"
-    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Version: 0.3.1\n"              # satisfy `>= 1.3.8`
+    "Libs: -L${libdir} -lrockchip_vpu\n"
+    "Libs.private: \n"  # pull in guard helpers & math
     "Cflags: -I\${includedir}\n"
 )
 
@@ -83,9 +85,9 @@ file(WRITE ${_PC_vpu_debug}
     "includedir=\${prefix}/include\n\n"
     "Name: rockchip_vpu\n"
     "Description: Rockchip VPU\n"
-    "Version: 1.3.8\n"              # satisfy `>= 1.3.8`
-    "Libs: -lrockchip_vpu\n"
-    "Libs.private: -lstdc++ -lm\n"  # pull in guard helpers & math
+    "Version: 0.3.1\n"              # satisfy `>= 1.3.8`
+    "Libs: -L${libdir} -lrockchip_vpu\n"
+    "Libs.private: \n"  # pull in guard helpers & math
     "Cflags: -I\${includedir}\n"
 )
 # Normalize paths in .pc and hook in vcpkg’s pkgconfig handling
