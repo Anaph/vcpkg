@@ -13,12 +13,21 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-RTSPClient.patch
         fix_operator_overload.patch
+        fix-atomic-flag-test.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
+
+    OPTIONS
+        # point FindOpenSSL at the vcpkg-installed ARMhf openssl
+        -DOPENSSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DOPENSSL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DOPENSSL_CRYPTO_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libcrypto.a
+        -DOPENSSL_SSL_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libssl.a
 )
 
 vcpkg_cmake_install()

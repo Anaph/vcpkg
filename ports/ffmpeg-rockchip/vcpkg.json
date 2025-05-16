@@ -15,7 +15,8 @@
       "host": true
     },
       "rkmpp",
-      "rkrga"
+      "rkrga",
+      "libdrm"
   ],
   "default-features": [
     "avcodec",
@@ -43,6 +44,13 @@
           "default-features": true,
           "features": [
             "rkrga"
+          ]
+        },
+        {
+          "name": "ffmpeg-rockchip",
+          "default-features": true,
+          "features": [
+            "drm"
           ]
         },
         {

@@ -137,7 +137,7 @@ file(WRITE ${_PC}
     "Name: libdrm\n"
     "Description: Userspace interface to kernel DRM services\n"
     "Version: 2.4.124\n"
-    "Libs: -L\${libdir} -ldrm\n"
+    "Libs: -L\${libdir} -ldrm -lm\n"
     "Cflags: -I\${includedir} -I\${includedir}/libdrm\n"
 
 )
@@ -150,7 +150,7 @@ file(WRITE ${_PC_debug}
     "Name: libdrm\n"
     "Description: Userspace interface to kernel DRM services\n"
     "Version: 2.4.124\n"
-    "Libs: -L\${libdir} -ldrm\n"
+    "Libs: -L\${libdir} -ldrm -lm\n"
     "Cflags: -I\${includedir} -I\${includedir}/libdrm\n"
 
 )

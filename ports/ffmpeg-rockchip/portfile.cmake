@@ -616,7 +616,11 @@ else()
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        find_program(PKGCONFIG pkg-config)
+        # Need to figure out a way to generate --cross-prefix below programmatically...
+        set(OPTIONS_CROSS " --enable-cross-compile --target-os=linux --arch=${VCPKG_TARGET_ARCHITECTURE} --cross-prefix=${VCPKG_CROSS_COMPILER_PREFIX} --pkg-config=${PKGCONFIG}")
+    else()
         vcpkg_find_acquire_program(GASPREPROCESSOR)
         foreach(GAS_PATH ${GASPREPROCESSOR})
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
