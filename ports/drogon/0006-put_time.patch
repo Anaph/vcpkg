@@ -1,0 +1,10 @@
+--- a/lib/src/Utilities.cc
++++ b/lib/src/Utilities.cc
+@@ -26,6 +26,7 @@
+ #include <io.h>
+ #include <iomanip>
+ #else
++#include <iomanip>
+ #include <uuid.h>
+ #include <unistd.h>
+ #endif

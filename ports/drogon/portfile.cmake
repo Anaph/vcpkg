@@ -10,6 +10,7 @@ vcpkg_from_github(
          0003-deps-redis.patch
          0004-drogon-ctl.patch
          0005-drogon-cross-compile.patch
+         0006-put_time.patch
 )
 
 set(DROGON_CTL_TOOL "")
@@ -36,6 +37,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DUSE_STATIC_LIBS_ONLY=ON
+        -DCMAKE_CXX_STANDARD=17
+        -DHAS_COROUTINE=OFF
         -DBUILD_SHARED_LIBS=${BUILD_DROGON_SHARED}
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
