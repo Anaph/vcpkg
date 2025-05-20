@@ -1,0 +1,4 @@
+Source: librknn1
+Version: 1.7.5
+Description: RKNN NPU1 runtime library and tools for Rockchip SoCs RK1808/RK1806, RV1109/RV1126.
+Homepage: https://github.com/airockchip/rknpu
