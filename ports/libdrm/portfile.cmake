@@ -103,6 +103,8 @@ file(MAKE_DIRECTORY   "${SOURCE_PATH}/tests/util")
 file(WRITE           "${SOURCE_PATH}/tests/util/Makefile.in" 
 "all:\n\t@echo \"== libdrm tests disabled by vcpkg ==\"\n")
 
+set(CFLAGS   "-O2 -fPIC ${CFLAGS}")
+set(CXXFLAGS "-O2 -fPIC ${CXXFLAGS}")
 
 # 3) Actually configure & build
 vcpkg_configure_make(
@@ -114,6 +116,7 @@ vcpkg_configure_make(
     --disable-silent-rules
     --verbose
     --disable-shared
+    --with-pic
     --enable-static
     --disable-dependency-tracking
     --disable-install-test-programs

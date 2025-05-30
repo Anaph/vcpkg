@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-RTSPClient.patch
         fix_operator_overload.patch
-        fix-atomic-flag-test.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
