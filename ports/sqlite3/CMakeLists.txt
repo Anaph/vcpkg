@@ -5,12 +5,21 @@ project(sqlite3 C)
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 
+# ====== Enable Position Independent Code (PIC) ======
+# Required when this static lib is linked into a shared library
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(PKGCONFIG_LIBS_PRIVATE "")
 set(PKGCONFIG_REQUIRES_PRIVATE "")
 
 add_library(sqlite3 sqlite3.c sqlite3.rc)
 
 target_include_directories(sqlite3 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:include>)
+
+# ====== Explicitly add -fPIC for GCC/Clang ======
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+    target_compile_options(sqlite3 PRIVATE -fPIC)
+endif()
 
 target_compile_definitions(
     sqlite3

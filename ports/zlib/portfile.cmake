@@ -14,9 +14,16 @@ vcpkg_from_github(
 # This is generated during the cmake build
 file(REMOVE "${SOURCE_PATH}/zconf.h")
 
+# ====== Force PIC for static builds ======
+set(OPTIONS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND OPTIONS -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${OPTIONS}
         -DSKIP_INSTALL_FILES=ON
         -DZLIB_BUILD_EXAMPLES=OFF
     OPTIONS_DEBUG

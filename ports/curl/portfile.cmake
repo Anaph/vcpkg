@@ -76,6 +76,8 @@ vcpkg_cmake_configure(
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        # ====== Force PIC for static builds ======
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
